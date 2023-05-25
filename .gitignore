@@ -1,0 +1,16 @@
+/nest-server/node_modules
+/specs/node_modules
+/nest-server/_secret
+/nest-server/src/config/config.ts
+/nest-server/version.json
+/nest-server/.migrate
+/nest-server/.migrate.back
+/nest-server/package-lock.json
+*.prod.ts
+**/dist
+/frontend/node_modules
+/frontend/build
+**/node_modules
+**/_secret
+/frontend/cypress/config/dev.config.ts
+/.idea/**
