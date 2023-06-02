@@ -54,7 +54,7 @@ export default function App() {
   return (
     <ul>
       <li>{state}</li>
-          {/* {state?.map((item) => (
+          {/* {state.map((item) => (
             <p key={item.id}>
               {item.title}
             </p>
