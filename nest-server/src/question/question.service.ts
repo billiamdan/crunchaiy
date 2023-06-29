@@ -2,7 +2,6 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { QuestionDocument } from './question.schema';
-import { QuestionDetails } from './question-details.interface';
 
 @Injectable()
 export class QuestionService {
