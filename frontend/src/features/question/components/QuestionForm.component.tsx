@@ -4,7 +4,7 @@ import { useAppDispatch, useAppSelector } from "../../../hooks/input/redux/hooks
 import useInput from "../../../hooks/input/use-input";
 import { validateQuestionLength } from "../../../shared/utils/validation/length";
 import { NewQuestion } from "../model/NewQuestion";
-import { addQuestion, getQuestions, resetForm } from "../QuestionSlice";
+import { addQuestion, getQuestions, resetForm } from "../QuestionsSlice";
 
 const QuestionFormComponent: FC = () => {
         const {
@@ -47,7 +47,7 @@ const QuestionFormComponent: FC = () => {
     
         const dispatch = useAppDispatch();
     
-        const {isLoading, isSuccess} = useAppSelector((state) => state.auth);
+        const {isLoading, isSuccess} = useAppSelector((state) => state.questions);
     
         useEffect(() => {
             if (isSuccess) {
@@ -144,17 +144,17 @@ const QuestionFormComponent: FC = () => {
                 defaultValue="#2 Answer"
             />
             <Button 
-            id='add-question-btn'
-            variant='contained' 
-            type='submit'
-            style={{
-                marginTop: '16px', 
-                height: '31px', 
-                backgroundColor: '#38a32a', 
-                color: 'black', 
-                borderColor: '#2e963d #4c9141 #499b4a', 
-                textTransform: 'none'}}>
-            Add question
+                id='add-question-btn'
+                variant='contained' 
+                type='submit'
+                style={{
+                    marginTop: '16px', 
+                    height: '31px', 
+                    backgroundColor: '#38a32a', 
+                    color: 'black', 
+                    borderColor: '#2e963d #4c9141 #499b4a', 
+                    textTransform: 'none'}}>
+                Add question
             </Button>
         </Grid>
     </form>

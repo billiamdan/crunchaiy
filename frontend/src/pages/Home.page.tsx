@@ -2,17 +2,39 @@ import { useEffect } from "react";
 import HeaderComponent from "../features/question/components/Header.component";
 import QuestionComponent from "../features/question/components/Question.component";
 import { useAppDispatch, useAppSelector } from "../hooks/input/redux/hooks";
-import { getQuestions } from "../features/question/QuestionSlice";
-import { Grid } from "@mui/material";
+import { getQuestions } from "../features/question/QuestionsSlice";
+import { Box, Button, CircularProgress, Grid } from "@mui/material";
 import QuestionFormComponent from "../features/question/components/QuestionForm.component";
+import ModalWindow from "../features/modal/components/modalComponent";
+import { openModal } from "../features/modal/modalSlice";
+const style = {
+  position: 'absolute' as 'absolute',
+  top: '50%',
+  left: '50%',
+  transform: 'translate(-50%, -50%)',
+  width: '650px',
+  bgcolor: 'background.paper',
+  border: '2px solid #cccccc',
+  boxShadow: 24,
+  p: 4,
+  padding: 2
+};
+
+
 
 const HomePage = () => {
+
   const dispatch = useAppDispatch()
-  const {questions} = useAppSelector((state) => state.question)
+
+  const {isLoading, isSuccess} = useAppSelector((state) => state.questions);
+  const {questions} = useAppSelector((state) => state.questions)
   useEffect(( ) => {
     dispatch(getQuestions())
   }, [])
 
+  // const isOpen = useAppSelector((state: RootState) => state.modal.isOpen);
+  //   if (!isOpen) return null;
+  if (isLoading) return <CircularProgress sx={{marginTop: '64px'}} color='primary'/>
   return (
     <div>
       <HeaderComponent/>
@@ -36,9 +58,14 @@ const HomePage = () => {
                 />)}
           </Grid>
         </Grid>
+        <ModalWindow>
+          <Box sx={style}>
+          </Box>
+        </ModalWindow>
       </div>
     </div>
   )
 }
 
 export default HomePage;
+
