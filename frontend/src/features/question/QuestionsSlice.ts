@@ -10,28 +10,26 @@ interface AsyncState {
     isError: boolean;
 }
 
-interface QuestionState extends AsyncState {
+interface QuestionsState extends AsyncState {
     questions: QuestionDocument[];
 }
 
-const initialState: QuestionState = {
+const initialState: QuestionsState = {
     questions: [],
     isLoading: false, 
     isSuccess: false,
     isError: false,
-
 }
-
 
 
 export const getQuestions = createAsyncThunk('question',
-async () => {
-    try {
-        return await questionService.getQuestions();
-    } catch (error) {
-        console.log('Error: ', error)
+    async () => {
+        try {
+            return await questionService.getQuestions();
+        } catch (error) {
+            console.log('Error: ', error)
+        }
     }
-}
 )
 
 export const addQuestion = createAsyncThunk (
@@ -56,6 +54,10 @@ export const deleteQuestion = createAsyncThunk (
     }
 ) 
 
+
+
+
+
 export const questionSlice = createSlice({
     name: 'question',
     initialState,
@@ -68,6 +70,7 @@ export const questionSlice = createSlice({
     },
     extraReducers: (builder) => {
         builder
+        //GET QUESTIONS
             .addCase(getQuestions.pending, (state) => {
                 state.isLoading = true
             })
@@ -81,6 +84,36 @@ export const questionSlice = createSlice({
                 state.isError = true;
                 state.questions = []
             })
+
+        //ADD QUESTION
+
+            // .addCase(addQuestion.pending, (state) => {
+            //     state.isLoading = true
+            // })
+            // .addCase(addQuestion.fulfilled, (state, action) => {
+            //     state.isLoading = false;
+            //     state.isSuccess = true;
+            // })
+            // .addCase(addQuestion.rejected, (state) => {
+            //     state.isLoading = false;
+            //     state.isError = true;
+            // })
+        //EDIT QUESTION
+
+        //DELETE QUESTION
+            // .addCase(deleteQuestion.pending, (state) => {
+            //     state.isLoading = true
+            // })
+            // .addCase(deleteQuestion.fulfilled, (state, action) => {
+            //     state.isLoading = false;
+            //     state.isSuccess = true;
+            // })
+            // .addCase(deleteQuestion.rejected, (state) => {
+            //     state.isLoading = false;
+            //     state.isError = true;
+            // })
+
+
     }
 })
 
