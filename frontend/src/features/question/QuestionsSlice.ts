@@ -2,6 +2,7 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { QuestionDocument } from "./model/Question";
 import questionService from "./services/question.service";
 import { NewQuestion } from "./model/NewQuestion";
+import { DisplayQuestion } from "./model/DisplayQuestion.interface";
 
 
 interface AsyncState {
@@ -20,7 +21,6 @@ const initialState: QuestionsState = {
     isSuccess: false,
     isError: false,
 }
-
 
 export const getQuestions = createAsyncThunk('question',
     async () => {
@@ -43,6 +43,18 @@ export const addQuestion = createAsyncThunk (
     }
 )
 
+export const updateQuestion = createAsyncThunk (
+    'question',
+    async (question: DisplayQuestion, thunkAPI) => {
+        const id = question.id
+        try {
+            return await questionService.updateQuestion(id, question)
+        } catch(error) {
+            return thunkAPI.rejectWithValue('Unable to update question!')
+        }
+    }
+)
+
 export const deleteQuestion = createAsyncThunk (
     'question',
     async (id: string, thunkAPI) => {
@@ -52,9 +64,7 @@ export const deleteQuestion = createAsyncThunk (
             return thunkAPI.rejectWithValue('Unable to delete!')
         }
     }
-) 
-
-
+)
 
 
 

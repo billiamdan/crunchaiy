@@ -5,9 +5,11 @@ import { InputState } from "../models/inputState.interface";
 import { ValidatorFn } from '../../shared/utils/validation/models/ValidationFn';
 
 
+
+
 const initialInputState: InputState = {
-    text: '',
-    hasBeenTouched: false
+        text: '',
+        hasBeenTouched: false
 }
 
 const inputReducer = (state: InputState, action: Action<InputActionType>) => {
@@ -25,11 +27,10 @@ const inputReducer = (state: InputState, action: Action<InputActionType>) => {
     }
 }
 
-const useInput = ( validatorFn?: ValidatorFn) => {
+const useInput = ( validatorFn?: ValidatorFn ) => {
+
     const [{ text, hasBeenTouched }, dispatch] = useReducer(
-        inputReducer, 
-        initialInputState
-    );
+        inputReducer, initialInputState);
 
     let shouldDisplayError;
 
@@ -37,6 +38,10 @@ const useInput = ( validatorFn?: ValidatorFn) => {
         const isValid = validatorFn(text);
 
         shouldDisplayError = !isValid && hasBeenTouched;
+    }
+
+    const deafultValueHandler = (value: any) => {
+        dispatch({ type: INPUT_ACTION_CHANGE, value: value})
     }
 
     const inputChangeHandler = (e: ChangeEvent<HTMLInputElement>) => {
@@ -54,13 +59,12 @@ const useInput = ( validatorFn?: ValidatorFn) => {
     return {
         text,
         shouldDisplayError,
+        deafultValueHandler,
         inputChangeHandler,
         inputBlurHandler,
         inputClearHandler,
 
     }
-
-
 }
 
 export default useInput;

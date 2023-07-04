@@ -11,7 +11,7 @@ export class QuestionService {
     ) {}
 
     async create(
-        number: string,
+        number: number,
         question: string,
         firstAnswer: string,
         secondAnswer: string
@@ -21,7 +21,10 @@ export class QuestionService {
     }
 
     async findAll(): Promise<QuestionDocument[]> {
-        return this.questionModel.find().exec();
+        return await this.questionModel
+            .find()
+            .sort( { number: 1 } )
+            .exec();
       }
 
     async find(id: string): Promise<QuestionDocument> {
@@ -30,7 +33,7 @@ export class QuestionService {
 
     async update(
         id: string, 
-        newNumber: string, 
+        newNumber: number, 
         newQuestion: string, 
         newFirstAnswer: string,
         newSecondAnswer: string): Promise<QuestionDocument> {
@@ -39,6 +42,12 @@ export class QuestionService {
             existingQuestion.question = newQuestion || existingQuestion.question;
             existingQuestion.firstAnswer = newFirstAnswer || existingQuestion.firstAnswer;
             existingQuestion.secondAnswer = newSecondAnswer || existingQuestion.secondAnswer;
+            return existingQuestion.save();
+    }
+
+    async updateNumber(id: string,  newNumber: number): Promise<QuestionDocument> {
+            let existingQuestion = await this.find(id);
+            existingQuestion.number = newNumber || existingQuestion.number;
             return existingQuestion.save();
     }
 

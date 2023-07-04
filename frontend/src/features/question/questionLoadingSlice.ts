@@ -6,11 +6,11 @@ interface QuestionsLoadingState {
 }
 
 const initialState: QuestionsLoadingState = {
-    loadingStarted: true,
+    loadingStarted: false,
 };
 
 const questionsLoadingSlice = createSlice({
-  name: 'modal',
+  name: 'questionsLoading',
   initialState,
   reducers: {
     startLoading: (state) => {

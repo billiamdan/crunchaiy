@@ -21,11 +21,18 @@ const HeaderComponent = () => {
     <Box sx={{flexGrow: 1}}>
         <AppBar position='static' sx={{backgroundColor: '#131921', color: 'white', padding: '4px'}}>
             <Toolbar sx={{display: 'flex', justifyContent: 'space-between'}}>
+                <Box 
+                    style={{
+                        width: '100px', 
+                        height: '100px', 
+                        paddingTop: '10px'
+                        }} >
+
+                </Box>
                 <Box style={{justifySelf: 'center'}}>
                     <img 
                         onClick={() => navigate('/')} 
                         style={{
-                            justifySelf: 'center',
                             width: '100px', 
                             height: '100px', 
                             paddingTop: '10px', 

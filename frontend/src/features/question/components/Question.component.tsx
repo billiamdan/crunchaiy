@@ -5,15 +5,13 @@ import {
     Card,
     CardActions,
     CardContent,
-    CircularProgress,
     Grid,
     Typography
 } from "@mui/material";
-import ClearIcon from '@mui/icons-material/Clear';
-import { deleteQuestion, getQuestions } from "../QuestionsSlice";
-import { useAppDispatch, useAppSelector } from "../../../hooks/input/redux/hooks";
+import { deleteQuestion } from "../QuestionsSlice";
+import { useAppDispatch } from "../../../hooks/input/redux/hooks";
 import { openModal } from "../../modal/modalSlice";
-import { RootState } from "../../../store";
+import { startLoading } from "../questionLoadingSlice";
 
 interface QuestionComponentProps {
     question: QuestionDocument
@@ -26,11 +24,11 @@ const QuestionComponent: FC<QuestionComponentProps> = ({question}) => {
     const deleteHandler = useCallback(() => {
         console.log(question._id)
         dispatch(deleteQuestion(question._id))
-        dispatch(getQuestions())
-    }, [question._id, dispatch]);
+        dispatch(startLoading())
+    }, [question._id]);
 
     const handleOpenModal = () => {
-        dispatch(openModal());
+        dispatch(openModal(question));
     };
   
    

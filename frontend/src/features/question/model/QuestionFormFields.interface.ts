@@ -1,5 +1,5 @@
 export interface QuestionFormField {
-    number: string;
+    number: number;
     question: string;
     firstAnswer: string;
     secondAnswer: string;

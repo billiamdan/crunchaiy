@@ -3,5 +3,5 @@ export interface DisplayQuestion {
     number: number;
     question: string;
     firstAnswer: string;
-    secondAnswer: string;
+    secondAnswer: string
 }
