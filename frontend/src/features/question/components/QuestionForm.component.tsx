@@ -4,11 +4,40 @@ import { useAppDispatch, useAppSelector } from "../../../hooks/input/redux/hooks
 import useInput from "../../../hooks/input/use-input";
 import { validateQuestionLength } from "../../../shared/utils/validation/length";
 import { NewQuestion } from "../model/NewQuestion";
-import { addQuestion, getQuestions, resetForm } from "../QuestionsSlice";
+import { addQuestion, resetForm, updateQuestion } from "../QuestionsSlice";
+import { startLoading } from "../questionLoadingSlice";
+import { RootState } from "../../../store";
+import { DisplayQuestion } from "../model/DisplayQuestion.interface";
 
 const QuestionFormComponent: FC = () => {
+
+        const isOpen = useAppSelector((state: RootState) => state.modal.isOpen);
+        const questionObj = useAppSelector((state: RootState) => state.modal.question);
+        const id = questionObj?._id
+        console.log(id)
+
+        const dispatch = useAppDispatch();
+    
+        const {isLoading, isSuccess} = useAppSelector((state) => state.questions);
+
+        useEffect(() => {
+            if (isSuccess) {
+                dispatch(resetForm())
+                clearForm();
+            }
+        }, [isSuccess])
+
+        useEffect(() => {
+            if (isOpen && questionObj) {
+                setDeafaulValue()
+            } else {
+                clearForm();
+            }
+        }, [isOpen])
+
         const {
             text: number,
+            deafultValueHandler: numberDeafultValueHandler,
             inputChangeHandler: numberChangeHandler,
             inputBlurHandler: numberBlurHandler,
             inputClearHandler: numberClearHandler,
@@ -17,6 +46,7 @@ const QuestionFormComponent: FC = () => {
         const {
             text: question,
             shouldDisplayError: questionHasError,
+            deafultValueHandler: questionDeafultValueHandler,
             inputChangeHandler: questionChangeHandler,
             inputBlurHandler: questionBlurHandler,
             inputClearHandler: questionClearHandler,
@@ -25,6 +55,7 @@ const QuestionFormComponent: FC = () => {
         const {
             text: firstAnswer,
             shouldDisplayError: firstAnswerHasError,
+            deafultValueHandler: firstAnswerDeafultValueHandler,
             inputChangeHandler: firstAnswerChangeHandler,
             inputBlurHandler: firstAnswerBlurHandler,
             inputClearHandler: firstAnswerClearHandler,
@@ -33,6 +64,7 @@ const QuestionFormComponent: FC = () => {
         const {
             text: secondAnswer,
             shouldDisplayError: secondAnswerHasError,
+            deafultValueHandler: secondAnswerDeafultValueHandler,
             inputChangeHandler: secondAnswerChangeHandler,
             inputBlurHandler: secondAnswerBlurHandler,
             inputClearHandler: secondAnswerClearHandler,
@@ -44,18 +76,15 @@ const QuestionFormComponent: FC = () => {
             firstAnswerClearHandler();
             secondAnswerClearHandler();
         }
-    
-        const dispatch = useAppDispatch();
-    
-        const {isLoading, isSuccess} = useAppSelector((state) => state.questions);
-    
-        useEffect(() => {
-            if (isSuccess) {
-                dispatch(resetForm())
-                clearForm();
-                console.log('New question form:');
-            }
-        }, [isSuccess, dispatch])
+
+        const setDeafaulValue = () => {
+            if (questionObj) {
+                numberDeafultValueHandler(questionObj.number);
+                questionDeafultValueHandler(questionObj.question);
+                firstAnswerDeafultValueHandler(questionObj.firstAnswer);
+                secondAnswerDeafultValueHandler(questionObj.secondAnswer);
+            } 
+        }
     
       const onSubmitHandler = (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
@@ -72,17 +101,26 @@ const QuestionFormComponent: FC = () => {
               firstAnswer, 
               secondAnswer
             }
-    
-        
-        dispatch(addQuestion(newQuestion))
-        dispatch(getQuestions())
-        console.log("NewQuestion:", newQuestion)
+
+        if(isOpen && questionObj) {
+            const existingQuestion: DisplayQuestion = {
+                id: questionObj._id,
+                number, 
+                question, 
+                firstAnswer, 
+                secondAnswer,
+            }
+            dispatch(updateQuestion(existingQuestion))
+        } else {
+            dispatch(addQuestion(newQuestion))
+        }
+        dispatch(startLoading())
     }
 
     if (isLoading) return <CircularProgress sx={{marginTop: '64px'}} color='primary'/>
   return (
     <form onSubmit={onSubmitHandler}>
-        <Grid container direction='column' justifyContent='flex-start' gap='20px'>
+        <Grid container direction='column' width='400px' justifyContent='flex-start' gap='20px'>
             <TextField
                 value={number}
                 onChange={numberChangeHandler}
@@ -93,7 +131,6 @@ const QuestionFormComponent: FC = () => {
                 variant='outlined' 
                 size='small'
                 label="Required"
-                defaultValue="1"
                 InputLabelProps={{
                     shrink: true,
                     }}
@@ -111,7 +148,7 @@ const QuestionFormComponent: FC = () => {
                 size='small'
                 required
                 label="Required"
-                defaultValue="Question"
+                
             />
             <TextField
                 value={firstAnswer}
@@ -126,7 +163,6 @@ const QuestionFormComponent: FC = () => {
                 size='small'
                 required
                 label="Required"
-                defaultValue="#1 Answer"
             />
             <TextField
                 value={secondAnswer}
@@ -141,7 +177,6 @@ const QuestionFormComponent: FC = () => {
                 size='small'
                 required
                 label="Required"
-                defaultValue="#2 Answer"
             />
             <Button 
                 id='add-question-btn'
@@ -154,7 +189,7 @@ const QuestionFormComponent: FC = () => {
                     color: 'black', 
                     borderColor: '#2e963d #4c9141 #499b4a', 
                     textTransform: 'none'}}>
-                Add question
+                {isOpen ? "Update question" : "Add question"}
             </Button>
         </Grid>
     </form>

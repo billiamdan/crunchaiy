@@ -6,7 +6,8 @@ import { getQuestions } from "../features/question/QuestionsSlice";
 import { Box, Button, CircularProgress, Grid } from "@mui/material";
 import QuestionFormComponent from "../features/question/components/QuestionForm.component";
 import ModalWindow from "../features/modal/components/modalComponent";
-import { openModal } from "../features/modal/modalSlice";
+import { stopLoading } from "../features/question/questionLoadingSlice";
+
 const style = {
   position: 'absolute' as 'absolute',
   top: '50%',
@@ -25,12 +26,13 @@ const style = {
 const HomePage = () => {
 
   const dispatch = useAppDispatch()
-
-  const {isLoading, isSuccess} = useAppSelector((state) => state.questions);
+  const {loadingStarted} = useAppSelector((state) => state.questionLoading);
+  const {isLoading} = useAppSelector((state) => state.questions);
   const {questions} = useAppSelector((state) => state.questions)
   useEffect(( ) => {
     dispatch(getQuestions())
-  }, [])
+    dispatch(stopLoading())
+  }, [loadingStarted])
 
   // const isOpen = useAppSelector((state: RootState) => state.modal.isOpen);
   //   if (!isOpen) return null;
@@ -47,10 +49,10 @@ const HomePage = () => {
         marginTop: '48px'
       }}>
         <Grid container spacing={1} style={{margin: '0 50px'}}>
-          <Grid item xs={4}>
+          <Grid container item xs={4}>
             <QuestionFormComponent/>
           </Grid>
-          <Grid item xs={8} direction='column' justifyContent='flex-start' gap='20px'>
+          <Grid container item xs={8} direction='column' justifyContent='flex-start' gap='20px'>
             {questions.length > 0 && questions.map((questionObj) => 
               <QuestionComponent 
                 key={questionObj._id} 

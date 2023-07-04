@@ -1,5 +1,5 @@
 export interface Question {
-    number: string;
+    number: number;
     question: string;
     firstAnswer: string;
     secondAnswer: string

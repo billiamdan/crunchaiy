@@ -1,5 +1,4 @@
 import { FC, ReactNode } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../../store';
 import { closeModal } from '../modalSlice';
 import { 
@@ -10,15 +9,16 @@ import {
 } from "@mui/material";
 import ClearIcon from '@mui/icons-material/Clear';
 import QuestionFormComponent from '../../question/components/QuestionForm.component';
+import { useAppDispatch, useAppSelector } from '../../../hooks/input/redux/hooks';
 
 interface ModalProps {
   children: ReactNode;
   title?: string;
 }
 
-const ModalWindow: FC<ModalProps> = ({ children, title }) => {
-  const dispatch = useDispatch();
-  const isOpen = useSelector((state: RootState) => state.modal.isOpen);
+const ModalWindow: FC<ModalProps> = () => {
+  const dispatch = useAppDispatch();
+  const isOpen = useAppSelector((state: RootState) => state.modal.isOpen);
 
   const handleCloseModal = () => {
     dispatch(closeModal());
@@ -30,13 +30,6 @@ const ModalWindow: FC<ModalProps> = ({ children, title }) => {
             <ClearIcon  style={{cursor: 'pointer'}} />
         </IconButton>
         <QuestionFormComponent/>
-      {/* {title && (
-        <DialogTitle id="modal-title">
-          {title}
-          
-        </DialogTitle>
-      )}
-      <DialogContent>{children}</DialogContent> */}
     </Dialog>
   );
 };

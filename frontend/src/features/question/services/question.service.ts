@@ -13,6 +13,11 @@ const addQuestion = async (newQuestion: NewQuestion): Promise<DisplayQuestion | 
     return response.data;
 }
 
+const updateQuestion = async (id: string, question: DisplayQuestion): Promise<DisplayQuestion | null> => {
+    const response = await axios.patch(`http://localhost:3000/api/question/${id}`, question);
+    return response.data;
+}
+
 const deleteQuestion = async (id: string) => {
     await axios.delete(`http://localhost:3000/api/question/${id}`);
 }
@@ -22,6 +27,7 @@ const deleteQuestion = async (id: string) => {
 const questionService = {
     getQuestions,
     addQuestion,
+    updateQuestion,
     deleteQuestion
 }
 
