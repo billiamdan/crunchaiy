@@ -16,9 +16,6 @@ const initialState: AsyncStateForAddQuestion = {
 export const updateQuestionsBulk = createAsyncThunk (
     'question/bulk',
     async (questionBulkArray: any, thunkAPI) => {
-        console.log(questionBulkArray === undefined ? "undefined" : "Object presented in Slice")
-
-        console.log('updateQuestionBulk')
         try {
             return await questionService.updateQuestionBulk(questionBulkArray)
             
