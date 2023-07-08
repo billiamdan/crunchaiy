@@ -4,28 +4,49 @@ import { useAppDispatch, useAppSelector } from "../../../hooks/input/redux/hooks
 import useInput from "../../../hooks/input/use-input";
 import { validateQuestionLength } from "../../../shared/utils/validation/length";
 import { NewQuestion } from "../model/NewQuestion";
-import { addQuestion, resetForm, updateQuestion } from "../QuestionsSlice";
-import { startLoading } from "../questionLoadingSlice";
+import { resetForm } from "../GetQuestionsSlice";
+import { startLoading } from "../QuestionsLoadingSlice";
 import { RootState } from "../../../store";
 import { DisplayQuestion } from "../model/DisplayQuestion.interface";
+import questionNumberAligner from "../../../shared/utils/numberAligner/numberAligner";
+import { updateQuestionsBulk } from "../UpdateQuestionsBulkSlice";
+import { addQuestion } from "../AddQuestionSlice";
+import { updateQuestion } from "../UpdateQuestionSlice";
 
 const QuestionFormComponent: FC = () => {
 
         const isOpen = useAppSelector((state: RootState) => state.modal.isOpen);
         const questionObj = useAppSelector((state: RootState) => state.modal.question);
+        const {questions} = useAppSelector((state) => state.getQuestions)
+
+
         const id = questionObj?._id
         console.log(id)
 
+        const min = 0
+        const max = questions.length + 1
+
         const dispatch = useAppDispatch();
     
-        const {isLoading, isSuccess} = useAppSelector((state) => state.questions);
-
+        const {isLoading, isSuccess} = useAppSelector((state) => state.getQuestions);
+        const {updateQuestionIsSuccess} = useAppSelector((state) => state.updateQuestion);
+        const {addQuestionIsSuccess} = useAppSelector((state) => state.addQuestion);
+        const {updateQuestionsBulkIsSuccess} = useAppSelector((state) => state.updateQuestionsBulk);
+        
         useEffect(() => {
             if (isSuccess) {
                 dispatch(resetForm())
                 clearForm();
             }
-        }, [isSuccess])
+            if (updateQuestionIsSuccess || addQuestionIsSuccess) {
+                dispatch(updateQuestionsBulk(questionNumberAligner(questions)))
+                console.log("Question updated")
+            }
+            if (updateQuestionsBulkIsSuccess) {
+                console.log("updateQuestionsBulkIsSuccess")
+                startLoading()
+            }
+        }, [isSuccess, updateQuestionIsSuccess, addQuestionIsSuccess, updateQuestionsBulkIsSuccess])
 
         useEffect(() => {
             if (isOpen && questionObj) {
@@ -90,6 +111,7 @@ const QuestionFormComponent: FC = () => {
         e.preventDefault();
     
         if (
+            number >= questions.length + 1 ||
             question.length === 0 || 
             firstAnswer.length === 0 || 
             secondAnswer.length === 0
@@ -109,9 +131,10 @@ const QuestionFormComponent: FC = () => {
                 question, 
                 firstAnswer, 
                 secondAnswer,
-            }
+            }     
             dispatch(updateQuestion(existingQuestion))
         } else {
+            dispatch(updateQuestionsBulk(questionNumberAligner(questions, newQuestion.number)))
             dispatch(addQuestion(newQuestion))
         }
         dispatch(startLoading())
@@ -125,6 +148,7 @@ const QuestionFormComponent: FC = () => {
                 value={number}
                 onChange={numberChangeHandler}
                 onBlur={numberBlurHandler}
+                inputProps={{ min, max }}
                 type='number' 
                 name='number' 
                 id="outlined-number"

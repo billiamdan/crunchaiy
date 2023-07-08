@@ -2,6 +2,7 @@ import axios from "axios"
 import { QuestionDocument } from "../model/Question"
 import { NewQuestion } from "../model/NewQuestion"
 import { DisplayQuestion } from "../model/DisplayQuestion.interface"
+import { UpdateQuestionNumber } from "../model/UpdateQuestionNumber.interface"
 
 const getQuestions = async () => {
     const response = await axios.get<QuestionDocument[]> (`http://localhost:3000/api/question`)
@@ -14,7 +15,18 @@ const addQuestion = async (newQuestion: NewQuestion): Promise<DisplayQuestion | 
 }
 
 const updateQuestion = async (id: string, question: DisplayQuestion): Promise<DisplayQuestion | null> => {
+    console.log(question)
     const response = await axios.patch(`http://localhost:3000/api/question/${id}`, question);
+    return response.data;
+}
+
+const updateQuestionNumber = async (id: string, numberUpdate: UpdateQuestionNumber): Promise<DisplayQuestion | null> => {
+    const response = await axios.patch(`http://localhost:3000/api/question/${id}`, numberUpdate);
+    return response.data;
+}
+
+const updateQuestionBulk = async (QuestionBulkArray: any) => {
+    const response = await axios.patch('http://localhost:3000/api/question', QuestionBulkArray);
     return response.data;
 }
 
@@ -28,6 +40,8 @@ const questionService = {
     getQuestions,
     addQuestion,
     updateQuestion,
+    updateQuestionNumber,
+    updateQuestionBulk,
     deleteQuestion
 }
 

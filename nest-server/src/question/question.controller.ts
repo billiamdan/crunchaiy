@@ -41,8 +41,14 @@ export class QuestionController {
         return this.questionService.updateNumber(id, number);
     }
 
+    @Patch()
+        updateBulk(@Body() QuestionBulkArray: Array<{ id: string, number: number }>
+    ){
+        return this.questionService.bulkWrite(QuestionBulkArray);
+    }
+
     @Delete(':id')
     deleteQuestion(@Param('id') id: string) {
         return this.questionService.deleteOne(id);
-    }
+    }  
 }

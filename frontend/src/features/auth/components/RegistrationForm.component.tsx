@@ -71,7 +71,7 @@ const RegistrationFormComponent: FC = () => {
             navigate('/signin')
             console.log('NEW USER:');
         }
-    }, [isSuccess, dispatch])
+    }, [isSuccess])
 
     const onSubmitHandler = (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
