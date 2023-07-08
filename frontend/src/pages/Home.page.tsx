@@ -2,11 +2,15 @@ import { useEffect } from "react";
 import HeaderComponent from "../features/question/components/Header.component";
 import QuestionComponent from "../features/question/components/Question.component";
 import { useAppDispatch, useAppSelector } from "../hooks/input/redux/hooks";
-import { getQuestions } from "../features/question/QuestionsSlice";
+import { getQuestions } from "../features/question/GetQuestionsSlice";
 import { Box, Button, CircularProgress, Grid } from "@mui/material";
 import QuestionFormComponent from "../features/question/components/QuestionForm.component";
 import ModalWindow from "../features/modal/components/modalComponent";
-import { stopLoading } from "../features/question/questionLoadingSlice";
+import questionNumberAligner from "../shared/utils/numberAligner/numberAligner";
+import { updateQuestionsBulk } from "../features/question/UpdateQuestionsBulkSlice";
+import { startLoading, stopLoading } from "../features/question/QuestionsLoadingSlice";
+import { RootState } from "../store";
+
 
 const style = {
   position: 'absolute' as 'absolute',
@@ -21,21 +25,29 @@ const style = {
   padding: 2
 };
 
-
-
 const HomePage = () => {
-
   const dispatch = useAppDispatch()
-  const {loadingStarted} = useAppSelector((state) => state.questionLoading);
-  const {isLoading} = useAppSelector((state) => state.questions);
-  const {questions} = useAppSelector((state) => state.questions)
-  useEffect(( ) => {
-    dispatch(getQuestions())
-    dispatch(stopLoading())
-  }, [loadingStarted])
+  const questionsIsLoading = useAppSelector((state: RootState) => state.questionsLoading.questionsIsLoading);
+  const {isLoading, isSuccess} = useAppSelector((state) => state.getQuestions);
+  const {questions} = useAppSelector((state) => state.getQuestions)
 
-  // const isOpen = useAppSelector((state: RootState) => state.modal.isOpen);
-  //   if (!isOpen) return null;
+  useEffect(( ) => {
+
+      dispatch(getQuestions())
+      console.log("Questions received")
+      dispatch(stopLoading())
+  }, [questionsIsLoading])
+
+  useEffect(( ) => {
+    if(!questionsIsLoading)
+      dispatch(updateQuestionsBulk(questionNumberAligner(questions)))
+      console.log(questionsIsLoading)
+  }, [questionsIsLoading])
+
+  function startLoadingHandler () {
+    startLoading()
+  }
+
   if (isLoading) return <CircularProgress sx={{marginTop: '64px'}} color='primary'/>
   return (
     <div>
@@ -64,6 +76,7 @@ const HomePage = () => {
           <Box sx={style}>
           </Box>
         </ModalWindow>
+        <Button onClick={startLoadingHandler}>Get questions</Button>
       </div>
     </div>
   )

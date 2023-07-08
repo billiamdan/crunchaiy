@@ -8,10 +8,10 @@ import {
     Grid,
     Typography
 } from "@mui/material";
-import { deleteQuestion } from "../QuestionsSlice";
+import { deleteQuestion } from "../GetQuestionsSlice";
 import { useAppDispatch } from "../../../hooks/input/redux/hooks";
 import { openModal } from "../../modal/modalSlice";
-import { startLoading } from "../questionLoadingSlice";
+import { startLoading } from "../QuestionsLoadingSlice";
 
 interface QuestionComponentProps {
     question: QuestionDocument

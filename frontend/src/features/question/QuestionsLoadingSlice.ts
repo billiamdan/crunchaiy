@@ -1,12 +1,11 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-
 interface QuestionsLoadingState {
-    loadingStarted: boolean;
+  questionsIsLoading: boolean;
 }
 
 const initialState: QuestionsLoadingState = {
-    loadingStarted: false,
+  questionsIsLoading: false,
 };
 
 const questionsLoadingSlice = createSlice({
@@ -14,10 +13,12 @@ const questionsLoadingSlice = createSlice({
   initialState,
   reducers: {
     startLoading: (state) => {
-      state.loadingStarted = true;
+      state.questionsIsLoading = true;
+      console.log("state.questionsLoading")
+      console.log(state.questionsIsLoading)
     },
     stopLoading: (state) => {
-      state.loadingStarted = false;
+      state.questionsIsLoading = false;
     },
   },
 });

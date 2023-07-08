@@ -3,9 +3,7 @@ import { RootState } from '../../../store';
 import { closeModal } from '../modalSlice';
 import { 
     IconButton,
-    Dialog,
-    DialogTitle,
-    DialogContent,
+    Dialog
 } from "@mui/material";
 import ClearIcon from '@mui/icons-material/Clear';
 import QuestionFormComponent from '../../question/components/QuestionForm.component';

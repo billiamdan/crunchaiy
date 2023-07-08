@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { QuestionDocument } from './question.schema';
+import bulkWriteInstruction from './bulkWriteHelper/bulkWrite.helper';
 
 @Injectable()
 export class QuestionService {
@@ -48,6 +49,9 @@ export class QuestionService {
     async updateNumber(id: string,  newNumber: number): Promise<QuestionDocument> {
             let existingQuestion = await this.find(id);
             existingQuestion.number = newNumber || existingQuestion.number;
+            existingQuestion.question = existingQuestion.question;
+            existingQuestion.firstAnswer = existingQuestion.firstAnswer;
+            existingQuestion.secondAnswer = existingQuestion.secondAnswer;
             return existingQuestion.save();
     }
 
@@ -55,4 +59,11 @@ export class QuestionService {
         const result = await this.questionModel.deleteOne({_id: id}).exec();
         return result
     }
+
+    async bulkWrite(QuestionBulkArray: Array<{ id: string, number: number }>) {
+        console.log(QuestionBulkArray)
+        const result = await this.questionModel.bulkWrite(bulkWriteInstruction(QuestionBulkArray));
+        return result
+    }
 }
+
