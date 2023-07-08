@@ -29,23 +29,24 @@ const HomePage = () => {
   const dispatch = useAppDispatch()
   const questionsIsLoading = useAppSelector((state: RootState) => state.questionsLoading.questionsIsLoading);
   const {isLoading, isSuccess} = useAppSelector((state) => state.getQuestions);
+  const {addQuestionIsSuccess} = useAppSelector((state) => state.addQuestion);
+  const {updateQuestionIsSuccess} = useAppSelector((state) => state.updateQuestion);
   const {questions} = useAppSelector((state) => state.getQuestions)
+  
 
   useEffect(( ) => {
-
       dispatch(getQuestions())
-      console.log("Questions received")
       dispatch(stopLoading())
-  }, [questionsIsLoading])
+      console.log("questions recieved")
+  }, [questionsIsLoading, addQuestionIsSuccess, updateQuestionIsSuccess])
 
   useEffect(( ) => {
     if(!questionsIsLoading)
       dispatch(updateQuestionsBulk(questionNumberAligner(questions)))
-      console.log(questionsIsLoading)
   }, [questionsIsLoading])
 
   function startLoadingHandler () {
-    startLoading()
+    dispatch(startLoading());
   }
 
   if (isLoading) return <CircularProgress sx={{marginTop: '64px'}} color='primary'/>

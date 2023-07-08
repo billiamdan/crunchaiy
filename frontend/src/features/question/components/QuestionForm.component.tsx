@@ -40,10 +40,8 @@ const QuestionFormComponent: FC = () => {
             }
             if (updateQuestionIsSuccess || addQuestionIsSuccess) {
                 dispatch(updateQuestionsBulk(questionNumberAligner(questions)))
-                console.log("Question updated")
             }
             if (updateQuestionsBulkIsSuccess) {
-                console.log("updateQuestionsBulkIsSuccess")
                 startLoading()
             }
         }, [isSuccess, updateQuestionIsSuccess, addQuestionIsSuccess, updateQuestionsBulkIsSuccess])
@@ -131,13 +129,46 @@ const QuestionFormComponent: FC = () => {
                 question, 
                 firstAnswer, 
                 secondAnswer,
-            }     
-            dispatch(updateQuestion(existingQuestion))
+            } 
+
+            const updateQuestionAndUpdateNumbers = async (questions: any, number?: number, id?: string) => {
+                let firstResult;
+                try {
+                    firstResult = await dispatch(updateQuestionsBulk(questionNumberAligner(questions, number, id)));
+                    if(firstResult) {
+                        let secondResult;
+                        secondResult = await dispatch(updateQuestion(existingQuestion));
+                        if(secondResult) {
+                            dispatch(startLoading());
+                        }
+                    }
+                    
+                  }
+                  catch (err) {
+                    console.log(err)
+                  }
+            }
+            updateQuestionAndUpdateNumbers(questions, existingQuestion.number, existingQuestion.id)
         } else {
-            dispatch(updateQuestionsBulk(questionNumberAligner(questions, newQuestion.number)))
-            dispatch(addQuestion(newQuestion))
+            const addQuestionAndUpdateNumbers = async (questions: any, number?: number) => {
+                let firstResult;
+                let secondResult;
+                try {
+                    console.log("number")
+                    firstResult = await dispatch(updateQuestionsBulk(questionNumberAligner(questions, number)));
+                    if(firstResult) {
+                        secondResult = await dispatch(addQuestion(newQuestion));
+                    }
+                    if(secondResult) {
+                        dispatch(startLoading());
+                    }
+                  }
+                  catch (err) {
+                    console.log(err)
+                  }
+            }
+            addQuestionAndUpdateNumbers(questions, newQuestion.number)
         }
-        dispatch(startLoading())
     }
 
     if (isLoading) return <CircularProgress sx={{marginTop: '64px'}} color='primary'/>

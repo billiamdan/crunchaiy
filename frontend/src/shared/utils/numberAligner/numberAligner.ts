@@ -1,39 +1,42 @@
 
 import { QuestionDocument } from "../../../features/question/model/Question"
 
+const questionNumberAligner = (questions: any, newElementNumber?: number, newElementId?: string) => {
+  
 
-
-
-//, addedElement?: number
-const questionNumberAligner = (questions: any, newElementNumber?: number) => {
-    //const {questions} = useAppSelector((state) => state.questions)
-    //const sortedquestions = questions.sort((a, b) => {a.number - b.number})
-    // console.log(questions)
-    //console.log ("newElementNumber " + newElementNumber)
+  
     if (questions) {
-      const storedArray: QuestionDocument[] = questions
-      //console.log(storedArray)
+      console.log("newElementNumber")
+      console.log(newElementNumber)
+      console.log("newElementId")
+      console.log(newElementId)
 
-      const found = storedArray.find((obj) => {
-        //console.log ("newElementNumber " + newElementNumber)
-        return obj.number === newElementNumber;
-      });
-      console.log("found")
-      console.log(found)
-      //const addedElementPosition = storedArray.indexOf(found)
-    // const found: any = questions.find((item: QuestionDocument) => {item.number === addedElement})
+      let numberModificator: number = 0;
+      let indexModificator: number = 1;
+      let existingQuestionNumber: any;
+
+      newElementNumber && newElementNumber > 0 ? 
+        numberModificator = 1 : 
+        numberModificator = 0
+
+      newElementNumber && newElementNumber > 0 ? 
+        indexModificator = 0 : 
+        indexModificator = 1
+
+      newElementId && newElementNumber  ? 
+        existingQuestionNumber = newElementNumber + 1 : 
+        existingQuestionNumber = newElementNumber 
+
+      const storedArray: QuestionDocument[] = questions
+
       
+      const found = storedArray.find((obj) => {
+          return obj.number === existingQuestionNumber
+      });
+   
       const addedElementPosition = questions.indexOf(found)
-    // console.log("addedElementPosition " + addedElementPosition)
+
       const index = addedElementPosition >= 0 ? addedElementPosition : 0
-      //console.log("index " + index)
-    // if (addedElementPosition !== 0) {
-    //   questions[addedElementPosition].number = questions[addedElementPosition].number +1
-    // }
-      let numberModificator = 0
-      let indexModificator = 1
-      newElementNumber && newElementNumber > 0 ? numberModificator = 1 : numberModificator = 0
-      newElementNumber && newElementNumber > 0 ? indexModificator = 0 : indexModificator = 1
 
     const containerArr = []
     
