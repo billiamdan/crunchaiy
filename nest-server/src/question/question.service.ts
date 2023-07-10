@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { QuestionDocument } from './question.schema';
+import bulkWriteInstruction from './bulkWriteHelper/bulkWrite.helper';
 
 @Injectable()
 export class QuestionService {
@@ -11,7 +12,7 @@ export class QuestionService {
     ) {}
 
     async create(
-        number: string,
+        number: number,
         question: string,
         firstAnswer: string,
         secondAnswer: string
@@ -21,7 +22,10 @@ export class QuestionService {
     }
 
     async findAll(): Promise<QuestionDocument[]> {
-        return this.questionModel.find().exec();
+        return await this.questionModel
+            .find()
+            .sort( { number: 1 } )
+            .exec();
       }
 
     async find(id: string): Promise<QuestionDocument> {
@@ -30,7 +34,7 @@ export class QuestionService {
 
     async update(
         id: string, 
-        newNumber: string, 
+        newNumber: number, 
         newQuestion: string, 
         newFirstAnswer: string,
         newSecondAnswer: string): Promise<QuestionDocument> {
@@ -42,8 +46,24 @@ export class QuestionService {
             return existingQuestion.save();
     }
 
+    async updateNumber(id: string,  newNumber: number): Promise<QuestionDocument> {
+            let existingQuestion = await this.find(id);
+            existingQuestion.number = newNumber || existingQuestion.number;
+            existingQuestion.question = existingQuestion.question;
+            existingQuestion.firstAnswer = existingQuestion.firstAnswer;
+            existingQuestion.secondAnswer = existingQuestion.secondAnswer;
+            return existingQuestion.save();
+    }
+
     async deleteOne(id: string) {
         const result = await this.questionModel.deleteOne({_id: id}).exec();
         return result
     }
+
+    async bulkWrite(QuestionBulkArray: Array<{ id: string, number: number }>) {
+        console.log(QuestionBulkArray)
+        const result = await this.questionModel.bulkWrite(bulkWriteInstruction(QuestionBulkArray));
+        return result
+    }
 }
+

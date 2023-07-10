@@ -1,7 +1,6 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Patch, Post } from '@nestjs/common';
 import { QuestionService } from './question.service';
 import { QuestionDocument } from './question.schema';
-import { QuestionDetails } from './question-details.interface';
 
 @Controller('question')
 export class QuestionController {
@@ -9,7 +8,7 @@ export class QuestionController {
 
     @Post()
     createQuestion(
-        @Body('number') number: string,
+        @Body('number') number: number,
         @Body('question') question: string,
         @Body('firstAnswer') firstAnswer: string,
         @Body('secondAnswer') secondAnswer: string
@@ -22,31 +21,34 @@ export class QuestionController {
     findAllQuestions(): Promise<QuestionDocument[]> {
         return this.questionService.findAll();
     }
-    
+
     @Patch(':id')
-    addQuestion(
+    updateQuestion(
         @Param('id') id: string,
-        @Body('number') number: string,
+        @Body('number') number: number,
         @Body('question') question: string,
-        @Body('first_answer') firstAnswer: string,
-        @Body('second_answer') secondAnswer: string
+        @Body('firstAnswer') firstAnswer: string,
+        @Body('secondAnswer') secondAnswer: string
     ): Promise<QuestionDocument> {
         return this.questionService.update(id, number, question, firstAnswer, secondAnswer);
     }
 
     @Patch(':id')
-    updateQuestion(
+    updateQuestionNumber(
         @Param('id') id: string,
-        @Body('number') number: string,
-        @Body('question') question: string,
-        @Body('first_answer') firstAnswer: string,
-        @Body('second_answer') secondAnswer: string
+        @Body('number') number: number,
     ): Promise<QuestionDocument> {
-        return this.questionService.update(id, number, question, firstAnswer, secondAnswer);
+        return this.questionService.updateNumber(id, number);
+    }
+
+    @Patch()
+        updateBulk(@Body() QuestionBulkArray: Array<{ id: string, number: number }>
+    ){
+        return this.questionService.bulkWrite(QuestionBulkArray);
     }
 
     @Delete(':id')
     deleteQuestion(@Param('id') id: string) {
         return this.questionService.deleteOne(id);
-    }
+    }  
 }
