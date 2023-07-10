@@ -12,6 +12,7 @@ import questionNumberAligner from "../../../shared/utils/numberAligner/numberAli
 import { updateQuestionsBulk } from "../UpdateQuestionsBulkSlice";
 import { addQuestion } from "../AddQuestionSlice";
 import { updateQuestion } from "../UpdateQuestionSlice";
+import { QuestionDocument } from "../model/Question";
 
 const QuestionFormComponent: FC = () => {
 
@@ -32,6 +33,23 @@ const QuestionFormComponent: FC = () => {
         const {updateQuestionIsSuccess} = useAppSelector((state) => state.updateQuestion);
         const {addQuestionIsSuccess} = useAppSelector((state) => state.addQuestion);
         const {updateQuestionsBulkIsSuccess} = useAppSelector((state) => state.updateQuestionsBulk);
+
+        const questionAdder = async (question: any, questions: QuestionDocument[], number?: number, id?: string) => {
+            let firstResult;
+            try {
+                firstResult = await dispatch(updateQuestionsBulk(questionNumberAligner(questions, number, id)));
+                if(firstResult) {
+                    let secondResult;
+                    secondResult = await dispatch(updateQuestion(question));
+                    if(secondResult) {
+                        dispatch(startLoading());
+                    }
+                }
+            }
+            catch (err) {
+                console.log(err)
+            }
+        }
         
         useEffect(() => {
             if (isSuccess) {
@@ -131,43 +149,10 @@ const QuestionFormComponent: FC = () => {
                 secondAnswer,
             } 
 
-            const updateQuestionAndUpdateNumbers = async (questions: any, number?: number, id?: string) => {
-                let firstResult;
-                try {
-                    firstResult = await dispatch(updateQuestionsBulk(questionNumberAligner(questions, number, id)));
-                    if(firstResult) {
-                        let secondResult;
-                        secondResult = await dispatch(updateQuestion(existingQuestion));
-                        if(secondResult) {
-                            dispatch(startLoading());
-                        }
-                    }
-                    
-                  }
-                  catch (err) {
-                    console.log(err)
-                  }
-            }
-            updateQuestionAndUpdateNumbers(questions, existingQuestion.number, existingQuestion.id)
+            
+            questionAdder(existingQuestion, questions, existingQuestion.number, existingQuestion.id)
         } else {
-            const addQuestionAndUpdateNumbers = async (questions: any, number?: number) => {
-                let firstResult;
-                let secondResult;
-                try {
-                    console.log("number")
-                    firstResult = await dispatch(updateQuestionsBulk(questionNumberAligner(questions, number)));
-                    if(firstResult) {
-                        secondResult = await dispatch(addQuestion(newQuestion));
-                    }
-                    if(secondResult) {
-                        dispatch(startLoading());
-                    }
-                  }
-                  catch (err) {
-                    console.log(err)
-                  }
-            }
-            addQuestionAndUpdateNumbers(questions, newQuestion.number)
+            questionAdder(newQuestion, questions, newQuestion.number)
         }
     }
 
