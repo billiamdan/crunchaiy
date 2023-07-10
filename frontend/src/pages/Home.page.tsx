@@ -38,7 +38,7 @@ const HomePage = () => {
       dispatch(getQuestions())
       dispatch(stopLoading())
       console.log("questions recieved")
-  }, [questionsIsLoading, addQuestionIsSuccess, updateQuestionIsSuccess])
+  }, [questionsIsLoading])
 
   useEffect(( ) => {
     if(!questionsIsLoading)

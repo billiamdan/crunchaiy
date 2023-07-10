@@ -1,52 +1,62 @@
-
 import { QuestionDocument } from "../../../features/question/model/Question"
+import { UpdateQuestionNumber } from "../../../features/question/model/UpdateQuestionNumber.interface";
 
-const questionNumberAligner = (questions: any, newElementNumber?: number, newElementId?: string) => {
-  
+const questionNumberAligner = (questions: QuestionDocument[], newElementNumber?: number, newElementId?: string) => {
 
-  
-    if (questions) {
-      console.log("newElementNumber")
-      console.log(newElementNumber)
-      console.log("newElementId")
-      console.log(newElementId)
-
-      let numberModificator: number = 0;
-      let indexModificator: number = 1;
-      let existingQuestionNumber: any;
-
-      newElementNumber && newElementNumber > 0 ? 
-        numberModificator = 1 : 
-        numberModificator = 0
-
-      newElementNumber && newElementNumber > 0 ? 
-        indexModificator = 0 : 
-        indexModificator = 1
-
-      newElementId && newElementNumber  ? 
-        existingQuestionNumber = newElementNumber + 1 : 
-        existingQuestionNumber = newElementNumber 
-
-      const storedArray: QuestionDocument[] = questions
-
-      
-      const found = storedArray.find((obj) => {
-          return obj.number === existingQuestionNumber
-      });
-   
-      const addedElementPosition = questions.indexOf(found)
-
-      const index = addedElementPosition >= 0 ? addedElementPosition : 0
-
-    const containerArr = []
-    
-    for (let i = index; i < storedArray.length; i++) {
-        if (storedArray[i] && i + indexModificator !== storedArray[i].number) {
-          containerArr.push({id: storedArray[i]._id, number: i + 1 + numberModificator});
-      }
+  const removeItem = (array: QuestionDocument[], removeId: string) => {
+    const index = array.findIndex((obj: QuestionDocument) => obj._id === removeId)
+    if (index > -1) {
+      array.splice(index, 1);
     }
-    return containerArr
-    }
+    return array;
   }
 
+  let index: number = 0
+  let questionsLength: number = questions.length || 0
+  let indexModificator: number = 1
+  let numberModificator: number = 1
+  let newQuestionNumberIsGreaterThanPrevious: boolean = false
+
+  let idIsPresentedInStoredArray: any
+  let numberIsPresentedInStoredArray: any
+  const storedArr: QuestionDocument[] | undefined = [...questions]
+  const containerArr: UpdateQuestionNumber[] = []
+
+  if (questions) {
+    if (newElementNumber) {
+        index = newElementNumber - 1
+        indexModificator = 0
+        numberModificator = 2
+      if (newElementId && newElementNumber) {
+            idIsPresentedInStoredArray = storedArr.find((obj: QuestionDocument) => {return obj._id === newElementId});
+            numberIsPresentedInStoredArray = storedArr.find((obj: QuestionDocument) => {
+              return obj.number == newElementNumber});
+          if (numberIsPresentedInStoredArray.number && newElementNumber && newElementNumber === idIsPresentedInStoredArray.number) {
+            return containerArr
+          } else if (idIsPresentedInStoredArray.number && newElementNumber && newElementNumber < idIsPresentedInStoredArray.number) {
+            index = newElementNumber - 1
+            numberModificator = 2
+          } else if (idIsPresentedInStoredArray.number && newElementNumber && newElementNumber > idIsPresentedInStoredArray.number) {            
+            questionsLength = newElementNumber
+            index = idIsPresentedInStoredArray.number - 1
+            numberModificator = 1
+            newQuestionNumberIsGreaterThanPrevious = true
+
+          }
+          removeItem(storedArr, newElementId)
+      }
+    }
+
+    for (let i = index; i < questionsLength; i++) {
+          if (storedArr[i] && i + indexModificator !== storedArr[i].number) {
+              if (newQuestionNumberIsGreaterThanPrevious && newElementNumber && i === newElementNumber - 1) {
+                  i++
+              } else {
+                  containerArr.push({id: storedArr[i]._id, number: i + numberModificator});
+              }
+        }
+      }
+      return containerArr
+    }
+  }
   export default questionNumberAligner;
