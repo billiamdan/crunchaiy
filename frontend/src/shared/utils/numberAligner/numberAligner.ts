@@ -23,25 +23,30 @@ const questionNumberAligner = (questions: QuestionDocument[], newElementNumber?:
   const containerArr: UpdateQuestionNumber[] = []
 
   if (questions) {
-    if (newElementNumber) {
+    if (newElementNumber !== undefined && newElementNumber >= 0 ) {
         index = newElementNumber - 1
         indexModificator = 0
         numberModificator = 2
-      if (newElementId && newElementNumber) {
+      if (newElementId && newElementNumber !== undefined && newElementNumber >= 0) {
             idIsPresentedInStoredArray = storedArr.find((obj: QuestionDocument) => {return obj._id === newElementId});
             numberIsPresentedInStoredArray = storedArr.find((obj: QuestionDocument) => {
-              return obj.number == newElementNumber});
-          if (numberIsPresentedInStoredArray.number && newElementNumber && newElementNumber === idIsPresentedInStoredArray.number) {
+              return obj.number == newElementNumber}); // creepy thing
+          if (numberIsPresentedInStoredArray && newElementNumber > 0 && newElementNumber === idIsPresentedInStoredArray.number) {
             return containerArr
-          } else if (idIsPresentedInStoredArray.number && newElementNumber && newElementNumber < idIsPresentedInStoredArray.number) {
+          } else if (idIsPresentedInStoredArray && newElementNumber > 0 && newElementNumber < idIsPresentedInStoredArray.number) {
             index = newElementNumber - 1
             numberModificator = 2
-          } else if (idIsPresentedInStoredArray.number && newElementNumber && newElementNumber > idIsPresentedInStoredArray.number) {            
+          } else if (idIsPresentedInStoredArray && newElementNumber > 0 && newElementNumber > idIsPresentedInStoredArray.number) {            
             questionsLength = newElementNumber
             index = idIsPresentedInStoredArray.number - 1
             numberModificator = 1
             newQuestionNumberIsGreaterThanPrevious = true
-
+          } else if (newElementNumber === 0) {
+            index = idIsPresentedInStoredArray.number - 1
+            numberModificator = 1
+          } else if (questionsLength < newElementNumber) {
+            index = questionsLength
+            questionsLength = questionsLength + 1
           }
           removeItem(storedArr, newElementId)
       }

@@ -28,16 +28,13 @@ const style = {
 const HomePage = () => {
   const dispatch = useAppDispatch()
   const questionsIsLoading = useAppSelector((state: RootState) => state.questionsLoading.questionsIsLoading);
-  const {isLoading, isSuccess} = useAppSelector((state) => state.getQuestions);
-  const {addQuestionIsSuccess} = useAppSelector((state) => state.addQuestion);
-  const {updateQuestionIsSuccess} = useAppSelector((state) => state.updateQuestion);
+  const {isLoading} = useAppSelector((state) => state.getQuestions);
   const {questions} = useAppSelector((state) => state.getQuestions)
   
 
   useEffect(( ) => {
       dispatch(getQuestions())
       dispatch(stopLoading())
-      console.log("questions recieved")
   }, [questionsIsLoading])
 
   useEffect(( ) => {

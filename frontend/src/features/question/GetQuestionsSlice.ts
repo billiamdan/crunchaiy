@@ -35,17 +35,6 @@ export const getQuestions = createAsyncThunk('question',
     }
 )
 
-// export const addQuestion = createAsyncThunk (
-//     'question/add',
-//     async (question: NewQuestion, thunkAPI) => {
-//         try {
-//             return await questionService.addQuestion(question)
-//         } catch(error) {
-//             return thunkAPI.rejectWithValue('Unable to add question!')
-//         }
-//     }
-// )
-
 export const updateQuestion = createAsyncThunk (
     'question/update',
     async (question: DisplayQuestion, thunkAPI) => {
@@ -57,35 +46,6 @@ export const updateQuestion = createAsyncThunk (
         }
     }
 )
-
-// export const updateQuestionNumber = createAsyncThunk (
-//     'question/updatenumber',
-//     async (numberUpdate: UpdateQuestionNumber, thunkAPI) => {
-//         const id = numberUpdate.id
-//         console.log('updateQuestionNumber')
-//         try {
-//             return await questionService.updateQuestionNumber(id, numberUpdate)
-            
-//         } catch(error) {
-//             return thunkAPI.rejectWithValue('Unable to update question number!')
-//         }
-//     }
-// )
-
-// export const updateQuestionBulk = createAsyncThunk (
-//     'question/bulk',
-//     async (questionBulkArray: any, thunkAPI) => {
-//         console.log(questionBulkArray === undefined ? "undefined" : "Object presented in Slice")
-
-//         console.log('updateQuestionBulk')
-//         try {
-//             return await questionService.updateQuestionBulk(questionBulkArray)
-            
-//         } catch(error) {
-//             return thunkAPI.rejectWithValue('Unable to update bulk of questions!')
-//         }
-//     }
-// )
 
 export const deleteQuestion = createAsyncThunk (
     'question/delete',

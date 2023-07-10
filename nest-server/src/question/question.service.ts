@@ -61,7 +61,6 @@ export class QuestionService {
     }
 
     async bulkWrite(QuestionBulkArray: Array<{ id: string, number: number }>) {
-        console.log(QuestionBulkArray)
         const result = await this.questionModel.bulkWrite(bulkWriteInstruction(QuestionBulkArray));
         return result
     }
