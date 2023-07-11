@@ -14,7 +14,6 @@ const questionsLoadingSlice = createSlice({
   reducers: {
     startLoading: (state) => {
       state.questionsIsLoading = true;
-      console.log("questionsLoading activated")
     },
     stopLoading: (state) => {
       state.questionsIsLoading = false;

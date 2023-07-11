@@ -20,11 +20,7 @@ const QuestionFormComponent: FC = () => {
         const questionObj = useAppSelector((state: RootState) => state.modal.question);
         const {questions} = useAppSelector((state) => state.getQuestions)
 
-
-        const id = questionObj?._id
-        console.log(id)
-
-        const min = 0
+        const min = 1
         const max = questions.length + 1
 
         const dispatch = useAppDispatch();
@@ -40,14 +36,18 @@ const QuestionFormComponent: FC = () => {
                 firstResult = await dispatch(updateQuestionsBulk(questionNumberAligner(questions, number, id)));
                 if(firstResult) {
                     let secondResult;
-                    secondResult = await dispatch(updateQuestion(question));
+                    if (id) {
+                        secondResult = await dispatch(updateQuestion(question));
+                    } else {
+                        secondResult = await dispatch(addQuestion(question));
+                    }
                     if(secondResult) {
                         dispatch(startLoading());
                     }
                 }
             }
-            catch (err) {
-                console.log(err)
+            catch (error) {
+                console.log('Error: ', error)
             }
         }
         
@@ -127,7 +127,8 @@ const QuestionFormComponent: FC = () => {
         e.preventDefault();
     
         if (
-            number >= questions.length + 1 ||
+            number < 1 ||
+            number > questions.length + 1||
             question.length === 0 || 
             firstAnswer.length === 0 || 
             secondAnswer.length === 0

@@ -15,7 +15,6 @@ const addQuestion = async (newQuestion: NewQuestion): Promise<DisplayQuestion | 
 }
 
 const updateQuestion = async (id: string, question: DisplayQuestion): Promise<DisplayQuestion | null> => {
-    console.log(question)
     const response = await axios.patch(`http://localhost:3000/api/question/${id}`, question);
     return response.data;
 }

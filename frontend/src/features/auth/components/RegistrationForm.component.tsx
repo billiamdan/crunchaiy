@@ -69,7 +69,6 @@ const RegistrationFormComponent: FC = () => {
             dispatch(reset())
             clearForm();
             navigate('/signin')
-            console.log('NEW USER:');
         }
     }, [isSuccess])
 
@@ -94,11 +93,8 @@ const RegistrationFormComponent: FC = () => {
 
             const newUser: NewUser = {
                 name, email, password,
-            }
-
-        
+            } 
         dispatch(register(newUser))
-        console.log("NewUser:", newUser)
     }
 
     if (isLoading) return <CircularProgress sx={{marginTop: '64px'}} color='primary'/>
